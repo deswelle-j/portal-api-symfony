@@ -1,0 +1,37 @@
+version: '3'
+volumes:
+  db-data:
+services:
+  php:
+    container_name: "php-fpm"
+    build:
+      context: php
+    environment:
+      - APP_ENV=${APP_ENV}
+      - APP_SECRET=${APP_SECRET}
+    volumes:
+      - ${APP_FOLDER}:/var/www
+    user: ${LOCAL_USER}
+
+  nginx:
+    container_name: "nginx"
+    build:
+      context: nginx
+    volumes:
+      - ${APP_FOLDER}:/var/www
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./logs:/var/log
+    depends_on:
+      - php
+    ports:
+      - ${NGINX_PORT}:81
+  database:
+    image: "mysql:8.0"
+    restart: on-failure
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3305:3306"
