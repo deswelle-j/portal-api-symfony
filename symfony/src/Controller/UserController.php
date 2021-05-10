@@ -14,6 +14,25 @@ use Symfony\Component\Serializer\Serializer;
 class UserController extends AbstractController
 {
     /**
+     * @Route("/api/users", name="show_users")
+     *@method({"GET"})
+     */
+    public function showUserList(UserRepository $repo): Response
+    {
+        $usersList = $repo->findAll();
+
+        $encoders = [new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+
+        $serializer = new Serializer($normalizers, $encoders);
+        $jsonContent = $serializer->serialize($usersList, 'json');
+
+        return $this->json([
+            'users' => $jsonContent,
+        ]);
+    }
+
+    /**
      * @Route("/api/users/{id}", name="show_user")
      *@method({"GET"})
      */
