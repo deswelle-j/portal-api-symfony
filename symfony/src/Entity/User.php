@@ -4,12 +4,11 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-class User implements UserInterface
+class User
 {
     /**
      * @ORM\Id
@@ -26,12 +25,12 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $password;
+    private $firstname;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="string", length=255)
      */
-    private $roles = [];
+    private $Lastname;
 
     public function getId(): ?int
     {
@@ -50,63 +49,27 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUsername(): string
+    public function getFirstname(): ?string
     {
-        return (string)$this->email;
+        return $this->firstname;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
+    public function setFirstname(string $firstname): self
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
+        $this->firstname = $firstname;
 
         return $this;
     }
 
-    public function setPassword(string $password): self
+    public function getLastname(): ?string
     {
-        $this->password = $password;
+        return $this->Lastname;
+    }
+
+    public function setLastname(string $Lastname): self
+    {
+        $this->Lastname = $Lastname;
+
         return $this;
     }
-
-    /**
-     * @see UserInterface
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function getSalt()
-    {
-        return null;
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
-    {
-        return null;
-    }
-
 }

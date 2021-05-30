@@ -3,10 +3,10 @@ security:
     providers:
         users:
             entity:
-                class: 'App\Entity\User'
+                class: 'App\Entity\Customer'
                 property: 'email'
     encoders:
-        App\Entity\User:
+        App\Entity\Customer:
             algorithm: auto
     firewalls:
         dev:
