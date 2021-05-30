@@ -4,11 +4,12 @@ namespace App\Entity;
 
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
  */
-class Customer
+class Customer implements UserInterface
 {
     /**
      * @ORM\Id
@@ -25,12 +26,12 @@ class Customer
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $firstname;
+    private $password;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="json")
      */
-    private $Lastname;
+    private $roles = [];
 
     public function getId(): ?int
     {
@@ -49,27 +50,64 @@ class Customer
         return $this;
     }
 
-    public function getFirstname(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUsername(): string
     {
-        return $this->firstname;
+        return (string)$this->email;
     }
 
-    public function setFirstname(string $firstname): self
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
     {
-        $this->firstname = $firstname;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
 
         return $this;
     }
 
-    public function getLastname(): ?string
+    public function setPassword(string $password): self
     {
-        return $this->Lastname;
-    }
-
-    public function setLastname(string $Lastname): self
-    {
-        $this->Lastname = $Lastname;
-
+        $this->password = $password;
         return $this;
     }
+
+    /**
+     * @see UserInterface
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getSalt()
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        return null;
+    }
+
 }
+
