@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -11,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class User
 {
     /**
+     * @Groups({"usersList"})
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -19,22 +22,27 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"usersList"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"usersList"})
      */
     private $firstname;
 
     /**
+
      * @ORM\Column(type="string", length=255)
+     * @Groups({"usersList"})
      */
-    private $Lastname;
+    private $lastname;
 
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"usersList"})
      */
     private $customer;
 
@@ -69,12 +77,12 @@ class User
 
     public function getLastname(): ?string
     {
-        return $this->Lastname;
+        return $this->lastname;
     }
 
-    public function setLastname(string $Lastname): self
+    public function setLastname(string $lastname): self
     {
-        $this->Lastname = $Lastname;
+        $this->lastname = $lastname;
 
         return $this;
     }
