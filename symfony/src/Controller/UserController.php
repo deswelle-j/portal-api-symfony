@@ -4,11 +4,15 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -36,17 +40,22 @@ class UserController extends AbstractController
 
     /**
      * @Route("/api/users", name="show_users")
-     *@method({"GET"})
+     * @method({
+    "GET"
+    })
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      */
     public function showUserList(UserRepository $repo): Response
     {
-        $usersList = $repo->findAll();
+        $customer = $this->getUser();
 
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
+        $usersList = $repo->findBy(['customer' => $customer->getId()]);
 
-        $serializer = new Serializer($normalizers, $encoders);
-        $jsonContent = $serializer->serialize($usersList, 'json');
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $normalizer = new ObjectNormalizer($classMetadataFactory);
+        $serializer = new Serializer([$normalizer]);
+
+        $jsonContent = $serializer->normalize($usersList[0],  null, ['groups' => ['usersList', 'usersCustomer']]);
 
         return $this->json([
             'users' => $jsonContent,
