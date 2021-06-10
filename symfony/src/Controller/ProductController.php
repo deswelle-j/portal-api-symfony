@@ -15,12 +15,16 @@ use Symfony\Component\Serializer\Serializer;
 class ProductController extends AbstractController
 {
     /**
-     * @Route("/api/products", name="show_products")
+     * @Route("/api/products/{page}", name="show_products")
      *@method({"GET"})
      */
-    public function showProductList(ProductRepository $repo): Response
+    public function showProductList(ProductRepository $repo, $page = 1): Response
     {
-        $productList = $repo->findAll();
+        $limit = 10;
+        $page = $page -1;
+        $offset = ($page * $limit);
+
+        $productList = $repo->findBy([], [], $limit, $offset);
 
         $encoders = [new JsonEncoder()];
         $normalizers = [new ObjectNormalizer()];
