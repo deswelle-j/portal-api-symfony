@@ -15,23 +15,16 @@ use Symfony\Component\Serializer\Serializer;
 
 class ProductController extends AbstractController
 {
+    const PRODUCT_BY_PAGE = 10;
+
     /**
      * @Route("/api/products/{page}", name="show_products")
      *@method({"GET"})
      */
     public function showProductList(ProductRepository $repo, PaginationService $pagination, $page = 1 ): Response
     {
-        $limit = 10;
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $queryBuilder = $entityManager->createQueryBuilder();
-
-        $queryBuilder->select('p')
-            ->from(Product::class, 'p')
-            ->orderBy('p.id', 'ASC');
-        $query = $queryBuilder->getQuery();
-
-        $results = $pagination->paginate($query, $page, $limit);
+        $query = $repo->findProduct();
+        $results = $pagination->paginate($query, $page, self::PRODUCT_BY_PAGE);
 
         $encoders = [new JsonEncoder()];
         $normalizers = [new ObjectNormalizer()];

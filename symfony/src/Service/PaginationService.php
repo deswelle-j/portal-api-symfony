@@ -11,16 +11,15 @@ class PaginationService
 {
     /**
      * @param QueryBuilder|Query $query
-     * @param Request $request
-     * @param int $limit
+     * @param integer $page
      * @return Paginator
      */
-    public function paginate($query, int $request, int $limit): Paginator
+    public function paginate($query, int $page, int $limit): Paginator
     {
         $paginator = new Paginator($query);
         $paginator
             ->getQuery()
-            ->setFirstResult($limit * ($request - 1))
+            ->setFirstResult($limit * ($page - 1))
             ->setMaxResults($limit);
 
         return $paginator;
