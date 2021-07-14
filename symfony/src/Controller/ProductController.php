@@ -5,6 +5,9 @@ namespace App\Controller;
 use App\Entity\Product;
 use App\Repository\ProductRepository;
 use App\Service\PaginationService;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,10 +19,31 @@ use Symfony\Component\Serializer\Serializer;
 class ProductController extends AbstractController
 {
     const PRODUCT_BY_PAGE = 10;
-
     /**
-     * @Route("/api/products/{page}", name="show_products")
-     *@method({"GET"})
+     * List the product.
+     *
+     * This call takes into account all confirmed product.
+     *
+     * @Route("/apiv1/products/{page}",
+     *     name="show_products",
+     *     methods={"GET"}
+     * )
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns the product",
+     *     @OA\Schema(
+     *         type="array",
+     *         @OA\Items(ref=@Model(type=Product::class, groups={"full"}))
+     *     )
+     * )
+     * @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     * )
+     * @OA\Tag(name="products")
+     * @Security(name="Bearer")
      */
     public function showProductList(ProductRepository $repo, PaginationService $pagination, $page = 1 ): Response
     {
@@ -37,8 +61,27 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/api/products/{id}", name="show_product")
-     *@method({"GET"})
+     * @Route("/apiv1/products/{id}",
+     *     name="show_product",
+     *     methods={"GET"}
+     * )
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns a product detail",
+     *     @OA\Schema(
+     *         type="array",
+     *         @OA\Items(ref=@Model(type=Product::class, groups={"full"}))
+     *     )
+     * )
+     * @OA\Parameter(
+     *     name="id",
+     *     in="query",
+     *     description="id of the product",
+     *     @OA\Schema(type="integer")
+     * )
+     * @OA\Tag(name="products")
+     * @Security(name="Bearer")
      */
     public function showProduct(Request $request, ProductRepository $repo, $id): Response
     {
