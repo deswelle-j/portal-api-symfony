@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,6 +21,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
@@ -39,7 +42,7 @@ class UserController extends AbstractController
      * @OA\Tag(name="users")
      * @Security(name="Bearer")
      */
-    public function addUser(Request $request, UserRepository $repo, SerializerInterface $serializer): Response
+    public function addUser(Request $request, UserRepository $repo, SerializerInterface $serializer, ValidatorInterface $validator): Response
     {
         $customer = $this->getUser();
 
@@ -47,11 +50,28 @@ class UserController extends AbstractController
         $user = $serializer->deserialize($data, User::class, 'json');
         $user->setCustomer($customer);
 
+        $errors = $validator->validate($user);
+
+        $errorMessage = [];
+        if (count($errors) > 0) {
+            foreach ($errors as $error) {
+                array_push($errorMessage, $error->getMessage());
+            };
+
+            return new JsonResponse([
+                "error" => Response::HTTP_BAD_REQUEST,
+                "messages" => $errorMessage
+            ],
+                Response::HTTP_BAD_REQUEST,
+                ['Content-Type'=> 'application/json']
+            );
+        }
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
         $em->flush();
 
-        return new Response('', Response::HTTP_CREATED);
+        return new Response('201', Response::HTTP_CREATED);
     }
 
     /**

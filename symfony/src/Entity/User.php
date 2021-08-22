@@ -6,9 +6,15 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ *  @UniqueEntity(
+ *  fields={"email"},
+ *  message="Cet email est déjà utilisé"
+ * )
  */
 class User
 {
@@ -23,12 +29,25 @@ class User
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"usersList"})
+     * @Assert\Email(
+     *  message = "Le champ email est invalide."
+     * )
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *  minMessage = "Le email doit comporter au moins 8 caractères.",
+     *  min = 8
+     * )
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"usersList"})
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *  minMessage = "Le prenom doit comporter au moins 8 caractères.",
+     *  min = 8
+     * )
      */
     private $firstname;
 
@@ -36,6 +55,11 @@ class User
 
      * @ORM\Column(type="string", length=255)
      * @Groups({"usersList"})
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *  minMessage = "Le mom doit comporter au moins 8 caractères.",
+     *  min = 8
+     * )
      */
     private $lastname;
 
