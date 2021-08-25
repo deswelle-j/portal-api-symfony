@@ -2,6 +2,12 @@
     "composer/package-versions-deprecated": {
         "version": "1.11.99.1"
     },
+    "composer/semver": {
+        "version": "3.2.5"
+    },
+    "composer/xdebug-handler": {
+        "version": "2.0.2"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -81,6 +87,18 @@
     "doctrine/sql-formatter": {
         "version": "1.1.1"
     },
+    "friendsofphp/php-cs-fixer": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "be2103eb4a20942e28a6dd87736669b757132435"
+        },
+        "files": [
+            ".php-cs-fixer.dist.php"
+        ]
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.3"
     },
@@ -130,6 +148,9 @@
     "nikic/php-parser": {
         "version": "v4.10.4"
     },
+    "php-cs-fixer/diff": {
+        "version": "v2.0.2"
+    },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"
     },
@@ -138,6 +159,9 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "1.4.0"
+    },
+    "phpstan/phpstan": {
+        "version": "0.12.96"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -276,6 +300,9 @@
     "symfony/polyfill-php80": {
         "version": "v1.20.0"
     },
+    "symfony/process": {
+        "version": "v5.2.12"
+    },
     "symfony/property-access": {
         "version": "v5.2.3"
     },
@@ -360,6 +387,19 @@
     },
     "symfony/twig-pack": {
         "version": "v1.0.1"
+    },
+    "symfony/validator": {
+        "version": "4.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.3",
+            "ref": "3eb8df139ec05414489d55b97603c5f6ca0c44cb"
+        },
+        "files": [
+            "config/packages/test/validator.yaml",
+            "config/packages/validator.yaml"
+        ]
     },
     "symfony/var-dumper": {
         "version": "v5.2.1"
