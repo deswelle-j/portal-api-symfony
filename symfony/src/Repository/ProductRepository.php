@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,9 +20,9 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-     /**
-      * @return Query Returns an array of Product objects
-      */
+    /**
+     * @return Query Returns an array of Product objects
+     */
     public function findProduct(): Query
     {
         return $this->createQueryBuilder('p')

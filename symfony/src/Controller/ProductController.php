@@ -18,7 +18,8 @@ use Symfony\Component\Serializer\Serializer;
 
 class ProductController extends AbstractController
 {
-    const PRODUCT_BY_PAGE = 10;
+    public const PRODUCT_BY_PAGE = 10;
+
     /**
      * List the product.
      *
@@ -45,7 +46,7 @@ class ProductController extends AbstractController
      * @OA\Tag(name="products")
      * @Security(name="Bearer")
      */
-    public function showProductList(ProductRepository $repo, PaginationService $pagination, $page = 1 ): Response
+    public function showProductList(ProductRepository $repo, PaginationService $pagination, $page = 1): Response
     {
         $query = $repo->findProduct();
         $results = $pagination->paginate($query, $page, self::PRODUCT_BY_PAGE);
@@ -55,6 +56,7 @@ class ProductController extends AbstractController
         $serializer = new Serializer($normalizers, $encoders);
 
         $jsonContent = $serializer->serialize($results, 'json');
+
         return $this->json([
             'products' => $jsonContent,
         ]);
@@ -85,7 +87,6 @@ class ProductController extends AbstractController
      */
     public function showProduct(Request $request, ProductRepository $repo, $id): Response
     {
-
         $product = $repo->findById($id);
 
         $encoders = [new JsonEncoder()];
