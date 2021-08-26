@@ -17,6 +17,7 @@ jobs:
 
     - name: Validate composer.json and composer.lock
       run: composer validate
+      uses: ./symfony/composer.json
 
     - name: Cache Composer packages
       id: composer-cache
