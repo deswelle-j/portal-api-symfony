@@ -1,4 +1,6 @@
 {
+    "name": "deswelle-j/portal-api-symfony",
+    "description": "Portal api with symfony 5",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "dev",
